@@ -1,8 +1,5 @@
 package com.org.todolist.infrastructure.entity;
 
-//Setup a postgressql and add user table , user
-// should have id(pk), first name , last name , salary , age , gender_id  (add 10 users) , profession_id, is_deleted ,
-// created_at , updated_at
 
 
 import lombok.Data;
@@ -13,6 +10,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -30,8 +28,9 @@ public class User {
     @Column(name = "age")
     private int age;
 
-    @Column(name = "gender_Id")
-    private int gender_d;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "gender_id")
+    private Gender gender;
 
     @Column(name = "profession_Id")
     private int professionId;

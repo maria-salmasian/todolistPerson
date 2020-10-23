@@ -23,7 +23,8 @@ public class Profession {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    //?? flag??
+    @Column(name = "isDeleted_flg")
+    private  boolean isDeleted = false;
 
 
 

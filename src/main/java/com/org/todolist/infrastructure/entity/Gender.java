@@ -1,9 +1,11 @@
 package com.org.todolist.infrastructure.entity;
 
+import com.org.todolist.utils.GenderEnum;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+
 
 
 @Entity
@@ -14,7 +16,7 @@ public class Gender {
     private int id; //primKey
 
     @Column(name = "gender")
-    private Gender gender;
+    private GenderEnum gender;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -22,6 +24,8 @@ public class Gender {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @OneToOne(mappedBy = "gender", cascade = CascadeType.ALL)
+    private User user;
     //list table
 
 
