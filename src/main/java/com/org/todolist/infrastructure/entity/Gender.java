@@ -5,15 +5,15 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-
+import java.util.List;
 
 
 @Entity
 @Data
 public class Gender {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private int id; //primKey
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id; //primKey
 
     @Column(name = "gender")
     private GenderEnum gender;
@@ -24,9 +24,12 @@ public class Gender {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @OneToOne(mappedBy = "gender", cascade = CascadeType.ALL)
-    private User user;
-    //list table
+    @OneToMany(mappedBy = "gender")
+    private List<User> users;
 
-
+    public Gender(GenderEnum gender, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.gender = gender;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
 }

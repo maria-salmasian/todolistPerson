@@ -1,11 +1,11 @@
 package com.org.todolist.infrastructure.entity;
 
 
-
 import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Entity
@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class User {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private int id; //primKey
+    private Integer id; //primKey
 
     @Column(name = "name")
     private String name;
@@ -28,12 +28,11 @@ public class User {
     @Column(name = "age")
     private int age;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "gender_id")
+    @ManyToOne()
     private Gender gender;
 
-    @Column(name = "profession_Id")
-    private int professionId;
+    @ManyToOne()
+    private Profession profession;
 
     @Column(name = "is_deleted")
     private boolean isDeleted;
@@ -44,7 +43,8 @@ public class User {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ToDoList> toDoLists;
 
 
 }

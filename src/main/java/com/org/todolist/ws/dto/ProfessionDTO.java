@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 
 @Data
 public class ProfessionDTO {
-    private int id; //primKey
     private ProfessionEnum profession;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

@@ -6,8 +6,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class ToDoListDTO {
-    private int id;
+public class ToDoListDTO  {
     private int userId;
     private StatusEnum status;
     private boolean isDeleted;

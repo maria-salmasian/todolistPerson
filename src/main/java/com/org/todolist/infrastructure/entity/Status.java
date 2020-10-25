@@ -5,14 +5,15 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Data
 public class Status {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private int id; //primKey
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id; //primKey
 
     @Column(name = "status")
     private StatusEnum status;
@@ -23,5 +24,12 @@ public class Status {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    //list table
+    @OneToMany(mappedBy = "status")
+    private List<ToDoList> toDoLists;
+
+    public Status(StatusEnum status, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.status = status;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
 }

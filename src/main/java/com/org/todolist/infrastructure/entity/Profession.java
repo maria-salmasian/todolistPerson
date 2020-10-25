@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Entity
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 public class Profession {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private int id; //primKey
+    private Integer id; //primKey
 
     @Column(name = "profession")
      private ProfessionEnum profession;
@@ -26,9 +27,16 @@ public class Profession {
     @Column(name = "isDeleted_flg")
     private  boolean isDeleted = false;
 
+    @OneToMany(mappedBy = "profession", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<User> users;
 
+    public Profession() {
+    }
 
-
-
-
+    public Profession(ProfessionEnum profession, LocalDateTime createdAt, LocalDateTime updatedAt, boolean isDeleted) {
+        this.profession = profession;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.isDeleted = isDeleted;
+    }
 }
