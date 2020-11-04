@@ -1,20 +1,26 @@
 package com.org.todolist.infrastructure.entity;
 
-import com.org.todolist.utils.StatusEnum;
+import com.org.todolist.utils.enumeration.StatusEnum;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Data
 public class Status {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id; //primKey
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private StatusEnum status;
 
@@ -25,7 +31,7 @@ public class Status {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "status")
-    private List<ToDoList> toDoLists;
+    private List<ToDoList> toDoItems;
 
     public Status(StatusEnum status, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.status = status;

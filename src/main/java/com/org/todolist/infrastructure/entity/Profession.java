@@ -1,6 +1,6 @@
 package com.org.todolist.infrastructure.entity;
 
-import com.org.todolist.utils.ProfessionEnum;
+import com.org.todolist.utils.enumeration.ProfessionEnum;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -15,8 +15,9 @@ public class Profession {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id; //primKey
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "profession")
-     private ProfessionEnum profession;
+    private ProfessionEnum profession;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

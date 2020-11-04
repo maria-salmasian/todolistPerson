@@ -1,5 +1,6 @@
 package com.org.todolist.core.service.impl;
 
+import com.org.todolist.core.model.UserModel;
 import com.org.todolist.core.service.UserService;
 import com.org.todolist.infrastructure.entity.Gender;
 import com.org.todolist.infrastructure.entity.Profession;
@@ -7,8 +8,9 @@ import com.org.todolist.infrastructure.entity.User;
 import com.org.todolist.infrastructure.repository.genderRepository.GenderRepository;
 import com.org.todolist.infrastructure.repository.professionRepository.ProfessionRepository;
 import com.org.todolist.infrastructure.repository.userRepository.UserRepository;
-import com.org.todolist.ws.dto.UserDTO;
 import com.org.todolist.ws.exception.NotFoundException;
+import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +19,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
     GenderRepository genderRepository;
@@ -28,97 +31,60 @@ public class UserServiceImpl implements UserService {
     @Autowired
     ProfessionRepository professionRepository;
 
-    private UserDTO fromEntityToDTO(User user) {
-        UserDTO userDTO = new UserDTO();
-        userDTO.setName(user.getName());
-        userDTO.setSurname(user.getSurname());
-        userDTO.setCreatedAt(user.getCreatedAt());
-        userDTO.setDeleted(user.isDeleted());
-        userDTO.setAge(user.getAge());
-        userDTO.setSalary(user.getSalary());
-        userDTO.setUpdatedAt(user.getUpdatedAt());
-        return userDTO;
-    }
+    @Autowired
+    ModelMapper modelMapper;
 
-    private User fromDTOToEntity(UserDTO userDTO) {
-        User user = new User();
-        user.setName(userDTO.getName());
-        user.setSurname(userDTO.getSurname());
-        user.setCreatedAt(userDTO.getCreatedAt());
-        user.setDeleted(userDTO.isDeleted());
-        user.setAge(userDTO.getAge());
-        user.setSalary(userDTO.getSalary());
-        user.setCreatedAt(LocalDateTime.now());
-        user.setUpdatedAt(LocalDateTime.now());
-        return user;
-    }
 
     @Override
-    public List<UserDTO> getUsers() throws NotFoundException {
-        List<UserDTO> userList = ((List<User>) userRepository
+    public List<UserModel> getUsers() throws NotFoundException {
+        log.info("getting all users");
+        List<UserModel> userModels = (userRepository
                 .findAll())
                 .stream()
-                .map(this::fromEntityToDTO)
+                .map(x-> modelMapper.map(x, UserModel.class))
                 .collect(Collectors.toList());
 
-        if (!userList.isEmpty())
-            return userList;
-        else throw new NotFoundException("No users found");
+        if (!userModels.isEmpty())
+            return userModels;
+        else throw new NotFoundException("No users found ok");
     }
 
     @Override
-    public UserDTO getUserByID(int id) throws NotFoundException {
+    public UserModel getUserByID(int id) throws NotFoundException {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("user not found for this id :: " + id));
-        return fromEntityToDTO(user);
+        log.info("getting user by id{}", id);
+        UserModel userModel = modelMapper.map(user, UserModel.class);
+        return userModel;
     }
 
+
     @Override
-    public User saveUser(UserDTO user) {
-        Gender gender = genderRepository.findByGender(user.getGender());
-        if (gender == null) {
-            gender = genderRepository.save(new Gender(user.getGender(), LocalDateTime.now(), LocalDateTime.now()));
-        }
-
-        Profession profession = professionRepository.findByProfession(user.getProfession());
-
-        if (profession == null) {
-            profession = professionRepository.save(new Profession(user.getProfession(), LocalDateTime.now(), LocalDateTime.now(), false));
-        }
-
-        User user1 = fromDTOToEntity(user);
-        gender.getUsers().add(user1);
-        profession.getUsers().add(user1);
+    public User saveUser(UserModel userModel) {
+        User user1 = modelMapper.map(userModel, User.class);
+        Gender gender = (genderRepository.findGenderById(userModel.getGender()));
+        Profession profession = (professionRepository.findProfessionById(userModel.getProfession()));
         user1.setGender(gender);
         user1.setProfession(profession);
+        user1.setCreatedAt(LocalDateTime.now());
+        user1.setUpdatedAt(LocalDateTime.now());
+        user1.setDeleted(false);
+        log.info("saving user", user1.getId());
         return userRepository.save(user1);
     }
 
     @Override
-    public User updateUserByID(int id, UserDTO userDTO) throws NotFoundException {
-        User user1 = userRepository.findById(id).orElseThrow(() ->
+    public User updateUserByID(int id, UserModel userModel) throws NotFoundException {
+         userRepository.findById(id).orElseThrow(() ->
                 new NotFoundException("user not found for this id :: " + id));
-        Gender gender = genderRepository.findByGender(userDTO.getGender());
-        if (gender == null) {
-            gender = genderRepository.save(new Gender(userDTO.getGender(), LocalDateTime.now(), LocalDateTime.now()));
-        }
-
-        Profession profession = professionRepository.findByProfession(userDTO.getProfession());
-
-        if (profession == null) {
-            profession = professionRepository.save(new Profession(userDTO.getProfession(), LocalDateTime.now(), LocalDateTime.now(), false));
-        }
-
-        gender.getUsers().add(user1);
-        profession.getUsers().add(user1);
-        user1.setName(userDTO.getName());
-        user1.setSurname(userDTO.getSurname());
-        user1.setAge(userDTO.getAge());
-        user1.setUpdatedAt(LocalDateTime.now());
-        user1.setDeleted(false);
+        User user1 = modelMapper.map(userModel, User.class);
+        Gender gender = (genderRepository.findGenderById(userModel.getGender()));
+        Profession profession = (professionRepository.findProfessionById(userModel.getProfession()));
         user1.setGender(gender);
         user1.setProfession(profession);
-        user1.setSalary(userDTO.getSalary());
+        user1.setUpdatedAt(LocalDateTime.now());
+        user1.setDeleted(false);
+        log.info("updating user", user1.getId());
         return userRepository.save(user1);
     }
 
@@ -127,6 +93,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("user not found for this id :: " + id));
         user.setDeleted(true);
+        log.info("deleting user", user.getId());
         userRepository.save(user);
 
     }

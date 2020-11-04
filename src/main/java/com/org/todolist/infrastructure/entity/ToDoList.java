@@ -1,16 +1,21 @@
 package com.org.todolist.infrastructure.entity;
 
+import com.sun.istack.internal.NotNull;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Entity
 @Data
+@NoArgsConstructor
 public class ToDoList {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id; //primKey
+
     @ManyToOne
     private Status status;
 
@@ -23,10 +28,11 @@ public class ToDoList {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @NotNull
     @Column(name = "description")
     private String description;
+
 
     @ManyToOne()
     private User user;
 }
-

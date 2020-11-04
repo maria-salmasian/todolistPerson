@@ -1,24 +1,18 @@
-package com.org.todolist.utils;
+package com.org.todolist.utils.enumeration;
 
-public enum ProfessionEnum {
-
-    DANCER(1){
+public enum GenderEnum {
+    FEMALE(1){
         public String toString(){
             return "1";
         }
     },
-    SINGER(2){
+    MALE(2){
         public String toString(){
             return "2";
         }
-    },
-    PROGRAMMER(3){
-        public String toString(){
-            return "3";
-        }
     };
     private int id;
-    ProfessionEnum(int id) {
+    GenderEnum(int id) {
         this.id =id;
     }
 
@@ -26,12 +20,14 @@ public enum ProfessionEnum {
         return id;
     }
 
-    public static ProfessionEnum  getById(int id)  {
-        for(ProfessionEnum type : values()) {
+    public static GenderEnum getById(int id){
+        for(GenderEnum type : values()) {
             if(type.id == (id))
                 return type;
         }
 
         return null;
     }
+
 }
+

@@ -1,13 +1,16 @@
 package com.org.todolist.infrastructure.entity;
 
-import com.org.todolist.utils.GenderEnum;
+import com.org.todolist.utils.enumeration.GenderEnum;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Data
 public class Gender {
@@ -15,6 +18,7 @@ public class Gender {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id; //primKey
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "gender")
     private GenderEnum gender;
 

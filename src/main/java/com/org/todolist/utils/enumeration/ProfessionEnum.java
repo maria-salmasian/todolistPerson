@@ -1,35 +1,24 @@
-package com.org.todolist.utils;
+package com.org.todolist.utils.enumeration;
 
-public enum StatusEnum {
-    IN_PROGRESS(1){
+public enum ProfessionEnum {
+
+    DANCER(1){
         public String toString(){
             return "1";
         }
     },
-    TO_DO(2){
+    SINGER(2){
         public String toString(){
             return "2";
         }
     },
-    DONE(3){
+    PROGRAMMER(3){
         public String toString(){
             return "3";
         }
-    },
-    DEPRECATED(4){
-        public String toString(){
-            return "4";
-        }
-    },
-    DELETED(5){
-        public String toString(){
-            return "5";
-        }
     };
-
     private int id;
-
-    StatusEnum(int id) {
+    ProfessionEnum(int id) {
         this.id =id;
     }
 
@@ -37,8 +26,8 @@ public enum StatusEnum {
         return id;
     }
 
-    public static StatusEnum  getById(int id)  {
-        for(StatusEnum type : values()) {
+    public static ProfessionEnum  getById(int id)  {
+        for(ProfessionEnum type : values()) {
             if(type.id == (id))
                 return type;
         }

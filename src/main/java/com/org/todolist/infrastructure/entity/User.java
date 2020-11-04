@@ -1,32 +1,50 @@
 package com.org.todolist.infrastructure.entity;
 
 
+import com.sun.istack.NotNull;
 import lombok.Data;
+import org.hibernate.validator.constraints.Range;
+
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.time.LocalDateTime;
 import java.util.List;
 
 
 @Entity
 @Data
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints=
+@UniqueConstraint(columnNames={"passport_no"}))
 public class User {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id; //primKey
 
+
+    @Column(name = "passport_no", unique = true)
+    private long passportNo;
+
+    @NotNull
     @Column(name = "name")
     private String name;
 
+    @NotNull
     @Column(name = "surname")
     private String surname;
 
+    @Email
+    @Column(name = "email")
+    private String email;
+
+    @Range(min=20, max=1000)
     @Column(name = "salary")
     private long salary;
 
+    @Range(min=18, max=45)
     @Column(name = "age")
     private int age;
+
 
     @ManyToOne()
     private Gender gender;
@@ -34,8 +52,8 @@ public class User {
     @ManyToOne()
     private Profession profession;
 
-    @Column(name = "is_deleted")
-    private boolean isDeleted;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ToDoList> toDoItems;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -43,8 +61,6 @@ public class User {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ToDoList> toDoLists;
-
-
+    @Column(name = "is_deleted")
+    private boolean isDeleted;
 }

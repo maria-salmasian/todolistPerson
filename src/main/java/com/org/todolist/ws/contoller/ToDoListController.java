@@ -1,81 +1,142 @@
 package com.org.todolist.ws.contoller;
 
+import com.org.todolist.core.model.ToDoListModel;
+import com.org.todolist.core.service.ToDoListService;
 import com.org.todolist.core.service.impl.ToDoListServiceImpl;
 import com.org.todolist.infrastructure.entity.ToDoList;
-import com.org.todolist.utils.StatusEnum;
+import com.org.todolist.utils.enumeration.StatusEnum;
 import com.org.todolist.ws.dto.ToDoListDTO;
 import com.org.todolist.ws.exception.NotFoundException;
+import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
+@Slf4j
 @RestController
 @RequestMapping("/toDoList")
 public class ToDoListController {
 
+    //    /users/{user_id}/items/{item_id}?status=1
+    //validator
+
     @Autowired
-    ToDoListServiceImpl toDoListService;
+    ToDoListService toDoListService;
+    @Autowired
+    ModelMapper modelMapper;
 
 
-    @RequestMapping(method = RequestMethod.GET, value = "/getAllOrdered")
+    /**
+     * @return
+     * @throws NotFoundException
+     */
+    @GetMapping("/getAllOrdered")
     public ResponseEntity<List<ToDoListDTO>> getOrderedToDoLists() throws NotFoundException {
-        List<ToDoListDTO> toDoListDTOS = toDoListService.getOrderedToDoListItems();
+        List<ToDoListModel> toDoListModels = toDoListService.getOrderedToDoListItems();
+        List<ToDoListDTO> toDoListDTOS = toDoListModels.stream().map(x -> modelMapper.map(x, ToDoListDTO.class)).collect(Collectors.toList());
+        log.info("method getOrderedToDoLists invoked from ToDoListController");
         return new ResponseEntity<>(toDoListDTOS, HttpStatus.OK);
 
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/getAllActive")
+    /**
+     * @return
+     * @throws NotFoundException
+     */
+    @GetMapping("/getAllActive")
     public ResponseEntity<List<ToDoListDTO>> getAllActiveToDoList() throws NotFoundException {
-        List<ToDoListDTO> toDoListDTOS = toDoListService.getActiveToDoListItems();
+        List<ToDoListModel> toDoListModels = toDoListService.getActiveToDoListItems();
+        List<ToDoListDTO> toDoListDTOS = toDoListModels.stream().map(x -> modelMapper.map(x, ToDoListDTO.class)).collect(Collectors.toList());
+        log.info("method getActiveToDoLists invoked from ToDoListController, those in progress");
         return new ResponseEntity<>(toDoListDTOS, HttpStatus.OK);
     }
 
 
-    @RequestMapping(method = RequestMethod.GET, value = "/getByStatus")
-    public ResponseEntity<List<ToDoListDTO>> getAllToDoListsByStatus(@RequestParam StatusEnum status) throws NotFoundException {
-        List<ToDoListDTO> toDoListDTOS = toDoListService.getToDoListItemsBasedOnStatus(status);
+    /**
+     * @param status
+     * @return
+     * @throws NotFoundException
+     */
+    @GetMapping("/getByStatus")
+    public ResponseEntity<List<ToDoListDTO>> getAllToDoListsByStatus(@RequestParam int status) throws NotFoundException {
+        List<ToDoListModel> toDoListModels = toDoListService.getToDoListItemsBasedOnStatus(status);
+        List<ToDoListDTO> toDoListDTOS = toDoListModels.stream().map(x -> modelMapper.map(x, ToDoListDTO.class)).collect(Collectors.toList());
+        log.info("method getToDoListsByStatus invoked from ToDoListController, with status{}", StatusEnum.getById(status));
         return new ResponseEntity<>(toDoListDTOS, HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/getById")
+    /**
+     * @param id
+     * @return
+     * @throws NotFoundException
+     */
+    @GetMapping("/{id}")
     public ResponseEntity<ToDoListDTO> getToDoListById(@PathVariable int id) throws NotFoundException {
-        ToDoListDTO toDoListDTOS = toDoListService.getToDoListByID(id);
+        ToDoListModel toDoListModel = toDoListService.getToDoListByID(id);
+        ToDoListDTO toDoListDTOS = modelMapper.map(toDoListModel, ToDoListDTO.class);
+        log.info("method getToDoListsById invoked from ToDoListController, with Id{}", id);
         return new ResponseEntity<>(toDoListDTOS, HttpStatus.OK);
     }
 
 
-
+    /**
+     * @param toDoListDTO
+     * @return
+     * @throws NotFoundException
+     */
     @PostMapping()
-    @RequestMapping(method = RequestMethod.POST, value = "/create")
-    public ResponseEntity<HttpStatus> createToDoList(@RequestBody ToDoListDTO toDoList) throws NotFoundException {
-        toDoListService.saveToDoList(toDoList);
+    public ResponseEntity<HttpStatus> createToDoList(@Valid @RequestBody ToDoListDTO toDoListDTO) throws NotFoundException {
+        ToDoListModel toDoListModel = modelMapper.map(toDoListDTO, ToDoListModel.class);
+        toDoListService.saveToDoList(toDoListModel);
+        log.info("method createToDoList invoked from ToDoListController");
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    /**
+     * @param id
+     * @param toDoListDTO
+     * @return
+     * @throws NotFoundException
+     */
     @PutMapping("/{id}")
-    @RequestMapping(method = RequestMethod.PUT, value = "/toDoList")
-    public ResponseEntity<ToDoList> updateToDoList(@PathVariable("id")  int id,
-                                           @RequestBody  ToDoListDTO toDoList) throws NotFoundException{
-        ToDoList updated = toDoListService.updateToDoListByID(id, toDoList);
+    public ResponseEntity<ToDoList> updateToDoList(@PathVariable("id") int id,
+                                                   @Valid @RequestBody ToDoListDTO toDoListDTO) throws NotFoundException {
+        ToDoListModel toDoListModel = modelMapper.map(toDoListDTO, ToDoListModel.class);
+        ToDoList updated = toDoListService.updateToDoListByID(id, toDoListModel);
+        log.info("method updateToDoList invoked from ToDoListController");
         return new ResponseEntity<>(updated, HttpStatus.OK);
 
     }
 
+    /**
+     * @param id
+     * @return
+     * @throws NotFoundException
+     */
     @DeleteMapping("/{id}")
-    @RequestMapping(method = RequestMethod.DELETE, value = "/delete")
     public ResponseEntity<String> deleteToDoList(
-            @PathVariable("id")  int id) throws NotFoundException {
+            @PathVariable("id") int id) throws NotFoundException {
         toDoListService.deleteToDoListByID(id);
+        log.info("method deleteToDoList invoked from ToDoListController");
+
         return new ResponseEntity<>("Success", HttpStatus.OK);
 
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "deleteAll")
+    /**
+     * @return
+     * @throws NotFoundException
+     */
+    @DeleteMapping("/all")
     public ResponseEntity<String> deleteAllToDoListItems() throws NotFoundException {
         toDoListService.deleteAllToDoList();
+        log.info("method deleteAllToDoListItems invoked from ToDoListController");
         return new ResponseEntity<>("Success", HttpStatus.OK);
 
     }

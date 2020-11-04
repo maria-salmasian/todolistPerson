@@ -1,4 +1,4 @@
-package com.org.todolist.ws.dto;
+package com.org.todolist.core.model;
 
 import com.org.todolist.utils.enumeration.StatusEnum;
 import lombok.AllArgsConstructor;
@@ -8,15 +8,17 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ToDoListDTO  {
+public class ToDoListModel {
     private Integer userId;
-    private StatusEnum status;
+    private int status;
     private boolean isDeleted;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private String description;
+
 
 }

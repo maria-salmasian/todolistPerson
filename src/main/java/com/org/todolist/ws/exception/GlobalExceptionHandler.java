@@ -26,3 +26,5 @@ public class GlobalExceptionHandler {
 
 
 }
+
+//add diffrent exception
