@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -14,8 +15,9 @@ import java.util.Optional;
 public class ToDoList {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Integer id; //primKey
+    private Integer id;
 
+    @NotNull
     @ManyToOne
     private Status status;
 
@@ -28,11 +30,13 @@ public class ToDoList {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+
     @NotNull
     @Column(name = "description")
     private String description;
 
 
+    @NotNull
     @ManyToOne()
     private User user;
 }

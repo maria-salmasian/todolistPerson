@@ -19,7 +19,7 @@ import java.util.List;
 public class User {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Integer id; //primKey
+    private Integer id;
 
 
     @Column(name = "passport_no", unique = true)
@@ -33,15 +33,15 @@ public class User {
     @Column(name = "surname")
     private String surname;
 
-    @Email
+    @Email(message = "email not valis")
     @Column(name = "email")
     private String email;
 
-    @Range(min=20, max=1000)
+    @Range(min=20, max=1000, message = "salary out of range")
     @Column(name = "salary")
     private long salary;
 
-    @Range(min=18, max=45)
+    @Range(min=18, max=45, message = "age out of range")
     @Column(name = "age")
     private int age;
 

@@ -6,23 +6,23 @@ import com.org.todolist.utils.enumeration.ProfessionEnum;
 import com.sun.istack.NotNull;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
 public class UserDTO {
 
-    @NotNull
+   private Integer id;
     private String name;
     private String surname;
     private long salary;
+    private String email;
     private int age;
-    private int gender;
-    private int profession;
+    private int genderId;
+    private int professionId;
     private long passportNo;
     private List<ToDoListDTO> toDoItems;
-//    private boolean isDeleted;
-//    private LocalDateTime createdAt;
-//    private LocalDateTime updatedAt;
+
 }
 

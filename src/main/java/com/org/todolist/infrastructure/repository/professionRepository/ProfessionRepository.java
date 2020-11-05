@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProfessionRepository extends JpaRepository<Profession, Integer> {
-
     Profession findProfessionById(Integer id);
     Profession findByProfession(ProfessionEnum professionEnum);
 }

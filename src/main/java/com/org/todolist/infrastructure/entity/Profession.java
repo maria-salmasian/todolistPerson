@@ -13,7 +13,7 @@ import java.util.List;
 public class Profession {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Integer id; //primKey
+    private Integer id;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "profession")

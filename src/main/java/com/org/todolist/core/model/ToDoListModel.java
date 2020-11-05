@@ -13,8 +13,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ToDoListModel {
-    private Integer userId;
-    private int status;
+    private Integer id;
+    private int userId;
+    private int statusId;
     private boolean isDeleted;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

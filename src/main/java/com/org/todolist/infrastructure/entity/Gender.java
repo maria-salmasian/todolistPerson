@@ -16,7 +16,7 @@ import java.util.List;
 public class Gender {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id; //primKey
+    private Integer id;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "gender")

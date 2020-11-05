@@ -12,24 +12,23 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Validated
 @Slf4j
 @RestController
 @RequestMapping("/toDoList")
 public class ToDoListController {
 
-    //    /users/{user_id}/items/{item_id}?status=1
-    //validator
-
     @Autowired
-    ToDoListService toDoListService;
+    private ToDoListService toDoListService;
     @Autowired
-    ModelMapper modelMapper;
+    private ModelMapper modelMapper;
 
 
     /**
@@ -59,15 +58,15 @@ public class ToDoListController {
 
 
     /**
-     * @param status
+     * @param statusId
      * @return
      * @throws NotFoundException
      */
     @GetMapping("/getByStatus")
-    public ResponseEntity<List<ToDoListDTO>> getAllToDoListsByStatus(@RequestParam int status) throws NotFoundException {
-        List<ToDoListModel> toDoListModels = toDoListService.getToDoListItemsBasedOnStatus(status);
+    public ResponseEntity<List<ToDoListDTO>> getAllToDoListsByStatus(@RequestParam int statusId) throws NotFoundException {
+        List<ToDoListModel> toDoListModels = toDoListService.getToDoListItemsBasedOnStatus(statusId);
         List<ToDoListDTO> toDoListDTOS = toDoListModels.stream().map(x -> modelMapper.map(x, ToDoListDTO.class)).collect(Collectors.toList());
-        log.info("method getToDoListsByStatus invoked from ToDoListController, with status{}", StatusEnum.getById(status));
+        log.info("method getToDoListsByStatus invoked from ToDoListController, with status{}", StatusEnum.getById(statusId));
         return new ResponseEntity<>(toDoListDTOS, HttpStatus.OK);
     }
 
@@ -93,6 +92,8 @@ public class ToDoListController {
     @PostMapping()
     public ResponseEntity<HttpStatus> createToDoList(@Valid @RequestBody ToDoListDTO toDoListDTO) throws NotFoundException {
         ToDoListModel toDoListModel = modelMapper.map(toDoListDTO, ToDoListModel.class);
+        toDoListModel.setUserId(toDoListDTO.getUserId());
+        toDoListDTO.setStatusId(toDoListDTO.getStatusId());
         toDoListService.saveToDoList(toDoListModel);
         log.info("method createToDoList invoked from ToDoListController");
         return new ResponseEntity<>(HttpStatus.CREATED);

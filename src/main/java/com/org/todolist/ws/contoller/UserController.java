@@ -14,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,10 +25,10 @@ import java.util.stream.Collectors;
 public class UserController {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
-    ModelMapper modelMapper;
+    private ModelMapper modelMapper;
 
 
     /**
@@ -53,6 +54,7 @@ public class UserController {
     public ResponseEntity<UserDTO> updateUser(@PathVariable("id") int id,
                                               @Valid @RequestBody UserDTO userDTO) throws NotFoundException {
         UserModel updatedUserModel = modelMapper.map(userDTO, UserModel.class);
+
         userService.updateUserByID(id, updatedUserModel);
         log.info("method updateUser invoked from UserController");
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
@@ -73,14 +75,22 @@ public class UserController {
     }
 
 
-    /**
+    /**DOES NOT WORK
      * @return
      * @throws NotFoundException
      */
     @GetMapping("/all")
     public ResponseEntity<List<UserDTO>> getAllUser() throws NotFoundException {
         List<UserModel> userModels = userService.getUsers();
-        List<UserDTO> userDTOS = userModels.stream().map(x -> modelMapper.map(x, UserDTO.class)).collect(Collectors.toList());
+        List<UserDTO> userDTOS = new ArrayList<>();
+        for (int i = 0; i <userModels.size() ; i++) {
+            UserDTO userDTO = modelMapper.map(userModels.get(i), UserDTO.class);
+            userDTO.setGenderId(userModels.get(i).getGenderId());
+            userDTO.setProfessionId(userModels.get(i).getProfessionId());
+            userDTOS.add(userDTO);
+        }
+        userDTOS.stream().collect(Collectors.toList());
+
         log.info("method getAllUsers invoked from UserController");
         return new ResponseEntity<>(userDTOS, HttpStatus.OK);
     }
@@ -99,7 +109,4 @@ public class UserController {
         return new ResponseEntity<>("Success", HttpStatus.OK);
 
     }
-
-    //query paramov request
-    //filtrner: /items/1?status=2
 }

@@ -9,6 +9,5 @@ import java.util.List;
 
 @Repository
 public interface ToDoListRepository extends JpaRepository<ToDoList, Integer> {
-
-    List<ToDoList> findAllByStatus(StatusEnum statusEnum);
+    List<ToDoList> findAllByStatusId(Integer status);
 }

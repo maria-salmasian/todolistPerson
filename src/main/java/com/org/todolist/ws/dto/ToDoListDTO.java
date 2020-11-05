@@ -12,8 +12,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ToDoListDTO  {
-    private Integer userId;
-    private StatusEnum status;
+    private Integer id;
+    private int userId;
+    private int statusId;
     private boolean isDeleted;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

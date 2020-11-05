@@ -25,16 +25,16 @@ import java.util.stream.Collectors;
 public class ToDoListServiceImpl implements ToDoListService {
 
     @Autowired
-    ToDoListRepository toDoListRepository;
+    private ToDoListRepository toDoListRepository;
 
     @Autowired
-    StatusRepository statusRepository;
+    private StatusRepository statusRepository;
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    ModelMapper modelMapper;
+    private ModelMapper modelMapper;
 
 
     @Override
@@ -60,10 +60,10 @@ public class ToDoListServiceImpl implements ToDoListService {
         log.info("method getToDoListItemsBasedOnStatus invoked from ToDoListService");
 
         List<ToDoListModel> userList = (toDoListRepository
-                .findAllByStatus(StatusEnum.getById(status)))
+                .findAllByStatusId(status)
                 .stream()
                 .map(x -> modelMapper.map(x, ToDoListModel.class))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
         if (!userList.isEmpty())
             return userList;
         else throw new NotFoundException("No toDoList found");
@@ -76,7 +76,11 @@ public class ToDoListServiceImpl implements ToDoListService {
 
         ToDoList toDoList = toDoListRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("toDoList not found for this id :: " + id));
-        ToDoListModel toDoListModel = modelMapper.map(toDoList, ToDoListModel.class);
+        ToDoListModel toDoListModel = new ToDoListModel();
+        toDoListModel.setUserId(userRepository.findUserById(toDoList.getUser().getId()).getId());
+        toDoListModel.setStatusId(statusRepository.findStatusById(toDoList.getStatus().getId()).getId());
+        toDoListModel = modelMapper.map(toDoList, ToDoListModel.class);
+
         return toDoListModel;
     }
 
@@ -88,7 +92,7 @@ public class ToDoListServiceImpl implements ToDoListService {
                 .findAll())
                 .stream()
                 .map(x -> modelMapper.map(x, ToDoListModel.class))
-                .filter(toDoListDTO -> toDoListDTO.getStatus() == (StatusEnum.IN_PROGRESS).getId())
+                .filter(toDoListDTO -> toDoListDTO.getStatusId() == (StatusEnum.IN_PROGRESS).getId())
                 .collect(Collectors.toList());
         if (!userList.isEmpty())
             return userList;
@@ -106,7 +110,7 @@ public class ToDoListServiceImpl implements ToDoListService {
         ToDoList toDoList = modelMapper.map(toDoListModel, ToDoList.class);
         User user = userRepository.findById(toDoListModel.getUserId())
                 .orElseThrow(() -> new NotFoundException("User specified not found"));
-        Status status = (statusRepository.findStatusById(toDoListModel.getStatus()));
+        Status status = (statusRepository.findStatusById(toDoListModel.getStatusId()));
 
         toDoList.setStatus(status);
         toDoList.setUser(user);
@@ -124,7 +128,7 @@ public class ToDoListServiceImpl implements ToDoListService {
         toDoListRepository.findById(id).orElseThrow(() ->
                 new NotFoundException("toDoList not found for this id :: " + id));
         User user = userRepository.findById(toDoListModel.getUserId()).orElseThrow(() -> new NotFoundException("User not found"));
-        Status status = (statusRepository.findStatusById(toDoListModel.getStatus()));
+        Status status = (statusRepository.findStatusById(toDoListModel.getStatusId()));
 
 
         ToDoList toDoList = modelMapper.map(toDoListModel, ToDoList.class);
@@ -149,10 +153,10 @@ public class ToDoListServiceImpl implements ToDoListService {
         log.info("method deleteAllToDoList invoked from ToDoListService ");
 
         List<ToDoList> all = toDoListRepository.findAll();
-        all.stream().map(item -> {
+        all.stream().forEach(item -> {
             item.setDeleted(true);
             toDoListRepository.save(item);
-            return null;
+
         });
     }
 

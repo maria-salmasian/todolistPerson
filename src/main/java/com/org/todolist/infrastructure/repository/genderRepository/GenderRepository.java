@@ -9,9 +9,10 @@ import java.util.Optional;
 
 @Repository
 public interface GenderRepository extends JpaRepository<Gender, Integer> {
-Gender findGenderById(Integer id);
-//    @Override
-//    Optional<Gender> findById(Integer integer);
+    Gender findGenderById(Integer id);
+
+    @Override
+    Optional<Gender> findById(Integer integer);
 
     Gender findByGender(GenderEnum genderEnum);
 }
