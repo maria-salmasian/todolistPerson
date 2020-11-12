@@ -1,4 +1,4 @@
-package com.org.todolist.infrastructure.repository.professionRepository;
+package com.org.todolist.infrastructure.repository;
 
 import com.org.todolist.infrastructure.entity.Profession;
 import com.org.todolist.utils.enumeration.ProfessionEnum;

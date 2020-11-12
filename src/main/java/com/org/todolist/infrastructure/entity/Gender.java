@@ -9,8 +9,8 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Data
 public class Gender {
@@ -31,9 +31,4 @@ public class Gender {
     @OneToMany(mappedBy = "gender")
     private List<User> users;
 
-    public Gender(GenderEnum gender, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.gender = gender;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
 }

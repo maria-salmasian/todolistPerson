@@ -10,12 +10,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Data
 public class Status {
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -33,9 +30,4 @@ public class Status {
     @OneToMany(mappedBy = "status")
     private List<ToDoList> toDoItems;
 
-    public Status(StatusEnum status, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.status = status;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
 }

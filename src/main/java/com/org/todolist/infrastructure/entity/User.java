@@ -1,8 +1,10 @@
 package com.org.todolist.infrastructure.entity;
 
 
+import com.org.todolist.utils.enumeration.GenderEnum;
 import com.sun.istack.NotNull;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Range;
 
 
@@ -21,7 +23,6 @@ public class User {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
 
-
     @Column(name = "passport_no", unique = true)
     private long passportNo;
 
@@ -33,7 +34,7 @@ public class User {
     @Column(name = "surname")
     private String surname;
 
-    @Email(message = "email not valis")
+    @Email(message = "email not valid")
     @Column(name = "email")
     private String email;
 
@@ -44,7 +45,6 @@ public class User {
     @Range(min=18, max=45, message = "age out of range")
     @Column(name = "age")
     private int age;
-
 
     @ManyToOne()
     private Gender gender;
@@ -63,4 +63,5 @@ public class User {
 
     @Column(name = "is_deleted")
     private boolean isDeleted;
+
 }

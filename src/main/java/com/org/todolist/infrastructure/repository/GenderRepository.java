@@ -1,4 +1,4 @@
-package com.org.todolist.infrastructure.repository.genderRepository;
+package com.org.todolist.infrastructure.repository;
 
 import com.org.todolist.infrastructure.entity.Gender;
 import com.org.todolist.utils.enumeration.GenderEnum;

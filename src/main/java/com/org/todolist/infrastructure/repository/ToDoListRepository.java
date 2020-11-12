@@ -1,7 +1,6 @@
-package com.org.todolist.infrastructure.repository.toDoListRepository;
+package com.org.todolist.infrastructure.repository;
 
 import com.org.todolist.infrastructure.entity.ToDoList;
-import com.org.todolist.utils.enumeration.StatusEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

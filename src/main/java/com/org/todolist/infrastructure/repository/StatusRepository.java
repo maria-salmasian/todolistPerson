@@ -1,4 +1,4 @@
-package com.org.todolist.infrastructure.repository.statusRepository;
+package com.org.todolist.infrastructure.repository;
 
 import com.org.todolist.infrastructure.entity.Status;
 import com.org.todolist.utils.enumeration.StatusEnum;
@@ -10,7 +10,3 @@ public interface StatusRepository extends JpaRepository<Status, Integer> {
     Status findByStatus(StatusEnum statusEnum);
     Status findStatusById(Integer id);
 }
-
-
-
-//layerneri nkaragrutyun

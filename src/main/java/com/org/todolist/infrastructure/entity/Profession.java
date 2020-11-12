@@ -1,7 +1,9 @@
 package com.org.todolist.infrastructure.entity;
 
 import com.org.todolist.utils.enumeration.ProfessionEnum;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -10,6 +12,7 @@ import java.util.List;
 
 @Entity
 @Data
+@NoArgsConstructor
 public class Profession {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -31,13 +34,4 @@ public class Profession {
     @OneToMany(mappedBy = "profession", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<User> users;
 
-    public Profession() {
-    }
-
-    public Profession(ProfessionEnum profession, LocalDateTime createdAt, LocalDateTime updatedAt, boolean isDeleted) {
-        this.profession = profession;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.isDeleted = isDeleted;
-    }
 }

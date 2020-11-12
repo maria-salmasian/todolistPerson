@@ -1,20 +1,25 @@
 package com.org.todolist.core.model;
+import com.sun.istack.NotNull;
 import lombok.*;
+import org.hibernate.validator.constraints.Range;
 
+import javax.validation.constraints.Email;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
 
 @Builder
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+
+//asuma petqa default unena, isk default menak chi toxum inteij dra hamar all arg ela petq
 public class UserModel {
     private Integer id;
     private String name;
     private String surname;
-    private long salary;
+    private BigDecimal salary;
     private String email;
     private int age;
     private int genderId;
@@ -24,7 +29,5 @@ public class UserModel {
     private List<ToDoListModel> toDoItems;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-
-
 
 }

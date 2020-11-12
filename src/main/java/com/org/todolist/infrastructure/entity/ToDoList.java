@@ -1,13 +1,12 @@
 package com.org.todolist.infrastructure.entity;
 
 import com.sun.istack.internal.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Entity
 @Data
