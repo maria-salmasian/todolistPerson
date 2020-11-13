@@ -3,27 +3,27 @@ package com.org.todolist.utils.enumeration;
 public enum StatusEnum {
     IN_PROGRESS(1){
         public String toString(){
-            return "1";
+            return "id: 1, state: in progress";
         }
     },
     TO_DO(2){
         public String toString(){
-            return "2";
+            return "id: 2, state: to do";
         }
     },
     DONE(3){
         public String toString(){
-            return "3";
+            return "id: 3, state: done";
         }
     },
     DEPRECATED(4){
         public String toString(){
-            return "4";
+            return "id: 4, state: deprecated";
         }
     },
     DELETED(5){
         public String toString(){
-            return "5";
+            return "id: 5, state: deleted";
         }
     };
 

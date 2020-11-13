@@ -5,10 +5,7 @@ import com.org.todolist.core.service.ToDoListService;
 import com.org.todolist.core.service.exception.ToDoListNotFoundException;
 import com.org.todolist.core.service.exception.UserNotFoundException;
 import com.org.todolist.core.service.exception.ValidationException;
-import com.org.todolist.infrastructure.entity.Status;
 import com.org.todolist.infrastructure.entity.ToDoList;
-import com.org.todolist.infrastructure.entity.User;
-import com.org.todolist.infrastructure.repository.StatusRepository;
 import com.org.todolist.infrastructure.repository.ToDoListRepository;
 import com.org.todolist.infrastructure.repository.UserRepository;
 import com.org.todolist.utils.enumeration.StatusEnum;
@@ -29,9 +26,6 @@ public class ToDoListServiceImpl implements ToDoListService {
 
     @Autowired
     private ToDoListRepository toDoListRepository;
-
-    @Autowired
-    private StatusRepository statusRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -56,10 +50,10 @@ public class ToDoListServiceImpl implements ToDoListService {
 
 //paramy petqa lini enum
     @Override
-    public List<ToDoListModel> getToDoListItemsBasedOnStatus(int status) {
+    public List<ToDoListModel> getToDoListItemsBasedOnStatus(StatusEnum status) {
         log.info("method getToDoListItemsBasedOnStatus invoked from ToDoListService");
         List<ToDoListModel> toDoListModels = (toDoListRepository
-                .findAllByStatusId(status)
+                .findAllByStatus_Status(status)
                 .stream()
                 .map(x -> modelMapper.map(x, ToDoListModel.class))
                 .collect(Collectors.toList()));
@@ -73,10 +67,7 @@ public class ToDoListServiceImpl implements ToDoListService {
         log.info("method getToDoListByID invoked from ToDoListService");
         ToDoList toDoList = toDoListRepository.findById(id)
                 .orElseThrow(() -> new ToDoListNotFoundException("toDoList not found for this id :: " + id));
-        ToDoListModel toDoListModel = ToDoListModel.builder()
-                .userId(userRepository.findUserById(toDoList.getUser().getId()).getId())
-                .statusId(statusRepository.findStatusById(toDoList.getStatus().getId()).getId()).build();
-        toDoListModel = modelMapper.map(toDoList, ToDoListModel.class);
+        ToDoListModel toDoListModel = modelMapper.map(toDoList, ToDoListModel.class);
         return toDoListModel;
     }
 
@@ -87,26 +78,22 @@ public class ToDoListServiceImpl implements ToDoListService {
                 .findAll())
                 .stream()
                 .map(x -> modelMapper.map(x, ToDoListModel.class))
-                .filter(toDoListDTO -> toDoListDTO.getStatusId() == (StatusEnum.IN_PROGRESS).getId())
+                .filter(toDoListDTO -> toDoListDTO.getStatusId() == (StatusEnum.IN_PROGRESS).getId() ||
+                        toDoListDTO.getStatusId() == (StatusEnum.TO_DO).getId())
                 .collect(Collectors.toList());
         Assert.notEmpty(toDoListModels,"No toDoList found");
         return toDoListModels;
-
     }
 
 
     @Override
     public ToDoList saveToDoList(ToDoListModel toDoListModel) throws UserNotFoundException, ValidationException {
         log.info("method saveToDoList invoked from ToDoListService");
-
         if (toDoListModel == null)
             throw new ValidationException("toDoList not found to save");
-        ToDoList toDoList = modelMapper.map(toDoListModel, ToDoList.class);
-        User user = userRepository.findById(toDoListModel.getUserId())
+        userRepository.findById(toDoListModel.getUserId())
                 .orElseThrow(() -> new UserNotFoundException("User specified not found"));
-        Status status = (statusRepository.findStatusById(toDoListModel.getStatusId()));
-        toDoList.setStatus(status);
-        toDoList.setUser(user);
+        ToDoList toDoList = modelMapper.map(toDoListModel, ToDoList.class);
         toDoList.setCreatedAt(LocalDateTime.now());
         toDoList.setUpdatedAt(LocalDateTime.now());
         toDoList.setDeleted(false);
@@ -117,15 +104,11 @@ public class ToDoListServiceImpl implements ToDoListService {
     @Override
     public ToDoList updateToDoListByID(int id, ToDoListModel toDoListModel) throws UserNotFoundException, ToDoListNotFoundException, ValidationException {
         log.info("method updateToDoListByID invoked from ToDoListService for id{}", id);
-
         if (toDoListModel != null) {
             ToDoList toDoListToBeUpdated = toDoListRepository.findById(id).orElseThrow(() ->
                     new ToDoListNotFoundException("toDoList not found for this id :: " + id));
-            User user = userRepository.findById(toDoListModel.getUserId()).orElseThrow(() -> new UserNotFoundException("User not found"));
-            Status status = (statusRepository.findStatusById(toDoListModel.getStatusId()));
             ToDoList toDoList = modelMapper.map(toDoListModel, ToDoList.class);
-            toDoList.setStatus(status);
-            toDoList.setUser(user);
+            toDoList.setUser( userRepository.findById(toDoListModel.getUserId()).orElseThrow(() -> new UserNotFoundException("User not found")));
             toDoList.setUpdatedAt(LocalDateTime.now());
             toDoListRepository.delete(toDoListToBeUpdated);
             return toDoListRepository.save(toDoList);

@@ -1,9 +1,5 @@
 package com.org.todolist.core.model;
-import com.sun.istack.NotNull;
 import lombok.*;
-import org.hibernate.validator.constraints.Range;
-
-import javax.validation.constraints.Email;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;

@@ -6,6 +6,7 @@ import com.org.todolist.core.service.exception.ToDoListNotFoundException;
 import com.org.todolist.core.service.exception.UserNotFoundException;
 import com.org.todolist.core.service.exception.ValidationException;
 import com.org.todolist.infrastructure.entity.ToDoList;
+import com.org.todolist.utils.enumeration.StatusEnum;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public interface ToDoListService {
     void deleteAllToDoList() ;
     ToDoListModel getToDoListByID(int id) throws  ToDoListNotFoundException;
     List<ToDoListModel> getOrderedToDoListItems() ;
-    List<ToDoListModel> getToDoListItemsBasedOnStatus(int status);
+    List<ToDoListModel> getToDoListItemsBasedOnStatus(StatusEnum status);
     List<ToDoListModel> getActiveToDoListItems();
 
 }

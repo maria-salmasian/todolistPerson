@@ -7,6 +7,7 @@ import com.org.todolist.core.service.exception.UserNotFoundException;
 import com.org.todolist.core.service.exception.ValidationException;
 import com.org.todolist.ws.dto.UserDTO;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.validator.internal.constraintvalidators.bv.AssertTrueValidator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,11 +35,12 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO userDTO) {
+        log.info("method createUser invoked from UserController");
+
         try {
             Assert.notNull(userDTO, "body is null");
             UserModel createdUserModel = modelMapper.map(userDTO, UserModel.class);
             userService.saveUser(createdUserModel);
-            log.info("method createUser invoked from UserController");
             return new ResponseEntity<>(userDTO, HttpStatus.CREATED);
 
         } catch (ValidationException e) {
@@ -50,11 +52,12 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<UserDTO> updateUser(@PathVariable("id") int id,
                                               @Valid @RequestBody UserDTO userDTO) {
+        log.info("method updateUser invoked from UserController");
+
         try {
             Assert.notNull(userDTO, "body is null");
             UserModel updatedUserModel = modelMapper.map(userDTO, UserModel.class);
             userService.updateUserByID(id, updatedUserModel);
-            log.info("method updateUser invoked from UserController");
             return new ResponseEntity<>(userDTO, HttpStatus.OK);
 
         } catch (NotFoundException e) {
@@ -66,10 +69,11 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable("id") int id) {
+        log.info("method getUserById invoked from UserController for the user with id{}", id);
+
         try {
             UserModel userModel = userService.getUserByID(id);
             UserDTO userDTO = modelMapper.map(userModel, UserDTO.class);
-            log.info("method getUserById invoked from UserController for the user with id{}", id);
             return new ResponseEntity<>(userDTO, HttpStatus.OK);
         } catch (UserNotFoundException e) {
             System.out.println(e.getMessage());
@@ -80,24 +84,23 @@ public class UserController {
 
     @GetMapping("/all")
     public ResponseEntity<List<UserDTO>> getAllUser() {
+        log.info("method getOrderedToDoLists invoked from ToDoListController");
         List<UserModel> toDoListModels = userService.getUsers();
         List<UserDTO> toDoListDTOS = toDoListModels.stream().map(x -> modelMapper.map(x, UserDTO.class)).collect(Collectors.toList());
-        log.info("method getOrderedToDoLists invoked from ToDoListController");
         return new ResponseEntity<>(toDoListDTOS, HttpStatus.OK);
     }
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteUser(
-            @PathVariable("id") int id) {
+    public ResponseEntity<String> deleteUser(@PathVariable("id") int id) {
+        log.info("method deleteUser invoked from UserController");
+
         try {
             userService.deleteUserByID(id);
-            log.info("method deleteUser invoked from UserController");
             return new ResponseEntity<>("Success", HttpStatus.OK);
         } catch (UserNotFoundException e) {
             System.out.println(e.getMessage());
         }
-
         return null;
     }
 }

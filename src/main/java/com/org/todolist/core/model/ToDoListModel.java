@@ -11,14 +11,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class ToDoListModel {
     private Integer id;
-    @NotNull
     private int userId;
-    @NotNull
     private int statusId;
     private boolean isDeleted;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    @NotNull
     private String description;
 
 

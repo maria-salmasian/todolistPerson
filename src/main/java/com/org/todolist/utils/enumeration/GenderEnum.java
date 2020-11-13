@@ -3,12 +3,12 @@ package com.org.todolist.utils.enumeration;
 public enum GenderEnum {
     FEMALE(1){
         public String toString(){
-            return "1";
+            return "id: 1, gender: female";
         }
     },
     MALE(2){
         public String toString(){
-            return "2";
+            return "id: 2, gender: male";
         }
     };
     private int id;

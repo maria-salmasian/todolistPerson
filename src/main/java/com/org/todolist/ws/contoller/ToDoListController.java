@@ -35,30 +35,30 @@ public class ToDoListController {
 
 
     @GetMapping("/getAllOrdered")
-    public ResponseEntity<List<ToDoListDTO>> getOrderedToDoLists()   {
+    public ResponseEntity<List<ToDoListDTO>> getOrderedToDoLists(){
+        log.info("method getOrderedToDoLists invoked from ToDoListController");
         List<ToDoListModel> toDoListModels = toDoListService.getOrderedToDoListItems();
         List<ToDoListDTO> toDoListDTOS = toDoListModels.stream().map(x -> modelMapper.map(x, ToDoListDTO.class)).collect(Collectors.toList());
-        log.info("method getOrderedToDoLists invoked from ToDoListController");
         return new ResponseEntity<>(toDoListDTOS, HttpStatus.OK);
 
     }
 
 
     @GetMapping("/getAllActive")
-    public ResponseEntity<List<ToDoListDTO>> getAllActiveToDoList()   {
+    public ResponseEntity<List<ToDoListDTO>> getAllActiveToDoList(){
+        log.info("method getActiveToDoLists invoked from ToDoListController, those in progress");
         List<ToDoListModel> toDoListModels = toDoListService.getActiveToDoListItems();
         List<ToDoListDTO> toDoListDTOS = toDoListModels.stream().map(x -> modelMapper.map(x, ToDoListDTO.class)).collect(Collectors.toList());
-        log.info("method getActiveToDoLists invoked from ToDoListController, those in progress");
         return new ResponseEntity<>(toDoListDTOS, HttpStatus.OK);
     }
 
 
 
     @GetMapping("/getByStatus")
-    public ResponseEntity<List<ToDoListDTO>> getAllToDoListsByStatus(@RequestParam int statusId)   {
-        List<ToDoListModel> toDoListModels = toDoListService.getToDoListItemsBasedOnStatus(statusId);
+    public ResponseEntity<List<ToDoListDTO>> getAllToDoListsByStatus(@RequestParam StatusEnum statusEnum)   {
+        List<ToDoListModel> toDoListModels = toDoListService.getToDoListItemsBasedOnStatus(statusEnum);
         List<ToDoListDTO> toDoListDTOS = toDoListModels.stream().map(x -> modelMapper.map(x, ToDoListDTO.class)).collect(Collectors.toList());
-        log.info("method getToDoListsByStatus invoked from ToDoListController, with status{}", StatusEnum.getById(statusId));
+        log.info("method getToDoListsByStatus invoked from ToDoListController, with status{} ", statusEnum.toString());
         return new ResponseEntity<>(toDoListDTOS, HttpStatus.OK);
     }
 
@@ -67,9 +67,9 @@ public class ToDoListController {
     public ResponseEntity<ToDoListDTO> getToDoListById(@PathVariable int id) {
         try {
             ToDoListModel toDoListModel = toDoListService.getToDoListByID(id);
-            ToDoListDTO toDoListDTOS = modelMapper.map(toDoListModel, ToDoListDTO.class);
+            ToDoListDTO toDoListDTO = modelMapper.map(toDoListModel, ToDoListDTO.class);
             log.info("method getToDoListsById invoked from ToDoListController, with Id{}", id);
-            return new ResponseEntity<>(toDoListDTOS, HttpStatus.OK);
+            return new ResponseEntity<>(toDoListDTO, HttpStatus.OK);
         }
         catch (ToDoListNotFoundException e){
             System.out.println(e.getMessage());
@@ -83,8 +83,6 @@ public class ToDoListController {
         try {
             Assert.notNull(toDoListDTO, "body is null");
             ToDoListModel toDoListModel = modelMapper.map(toDoListDTO, ToDoListModel.class);
-            toDoListModel.setUserId(toDoListDTO.getUserId());
-            toDoListDTO.setStatusId(toDoListDTO.getStatusId());
             toDoListService.saveToDoList(toDoListModel);
             log.info("method createToDoList invoked from ToDoListController");
             return new ResponseEntity<>(HttpStatus.CREATED);
@@ -116,7 +114,7 @@ public class ToDoListController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteToDoList(
-            @PathVariable("id") int id) throws ToDoListNotFoundException {
+            @PathVariable("id") int id) {
         try {
             toDoListService.deleteToDoListByID(id);
             log.info("method deleteToDoList invoked from ToDoListController");

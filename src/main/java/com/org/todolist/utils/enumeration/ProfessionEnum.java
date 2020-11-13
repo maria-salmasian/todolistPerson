@@ -4,17 +4,17 @@ public enum ProfessionEnum {
 
     DANCER(1){
         public String toString(){
-            return "1";
+            return "id: 1, profession: dancer";
         }
     },
     SINGER(2){
         public String toString(){
-            return "2";
+            return "id: 2, profession: singer";
         }
     },
     PROGRAMMER(3){
         public String toString(){
-            return "3";
+            return "id: 3, profession: programmer";
         }
     };
     private int id;

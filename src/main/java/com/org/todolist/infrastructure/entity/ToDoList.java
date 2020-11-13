@@ -1,7 +1,6 @@
 package com.org.todolist.infrastructure.entity;
 
 import com.sun.istack.internal.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -29,11 +28,9 @@ public class ToDoList {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-
     @NotNull
     @Column(name = "description")
     private String description;
-
 
     @NotNull
     @ManyToOne()

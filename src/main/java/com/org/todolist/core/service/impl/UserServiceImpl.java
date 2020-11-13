@@ -30,23 +30,17 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private GenderRepository genderRepository;
-
-    @Autowired
-    private ProfessionRepository professionRepository;
-
-    @Autowired
     private ModelMapper modelMapper;
 
     @Override
     public List<UserModel> getUsers() {
         log.info("getting all users");
-            List<UserModel> userList = (userRepository.findAll())
-                    .stream()
-                    .map(x -> modelMapper.map(x, UserModel.class))
-                    .collect(Collectors.toList());
-            Assert.notEmpty(userList, "No user found");
-            return userList;
+        List<UserModel> userList = (userRepository.findAll())
+                .stream()
+                .map(x -> modelMapper.map(x, UserModel.class))
+                .collect(Collectors.toList());
+        Assert.notEmpty(userList, "No user found");
+        return userList;
     }
 
     @Override
@@ -55,8 +49,6 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new UserNotFoundException("user not found for this id :: " + id));
         log.info("getting user by id{} ", id);
         UserModel userModel = modelMapper.map(user, UserModel.class);
-        userModel.setGenderId(genderRepository.findGenderById(user.getGender().getId()).getId());
-        userModel.setProfessionId(professionRepository.findProfessionById(user.getGender().getId()).getId());
         return userModel;
     }
 
@@ -65,17 +57,12 @@ public class UserServiceImpl implements UserService {
     public User saveUser(UserModel userModel) throws ValidationException {
         if (userModel != null) {
             User user = modelMapper.map(userModel, User.class);
-            Gender gender = (genderRepository.findGenderById(userModel.getGenderId()));
-            Profession profession = (professionRepository.findProfessionById(userModel.getProfessionId()));
-            user.setGender(gender);
-            user.setProfession(profession);
             user.setCreatedAt(LocalDateTime.now());
             user.setUpdatedAt(LocalDateTime.now());
             user.setDeleted(false);
             log.info("saving user", user.getId());
             return userRepository.save(user);
-        }
-        else throw new ValidationException("Body Not Valid");
+        } else throw new ValidationException("Body Not Valid");
 
     }
 
@@ -85,10 +72,6 @@ public class UserServiceImpl implements UserService {
                 new UserNotFoundException("user not found for this id :: " + id));
         Assert.notNull(userModel, "the body is null");
         User user1 = modelMapper.map(userModel, User.class);
-        Gender gender = (genderRepository.findById(userModel.getGenderId()).orElseThrow(() -> new NotFoundException("gender id not found")));
-        Profession profession = (professionRepository.findProfessionById(userModel.getProfessionId()));
-        user1.setGender(gender);
-        user1.setProfession(profession);
         user1.setUpdatedAt(LocalDateTime.now());
         user1.setDeleted(false);
         log.info("updating user", user1.getId());
