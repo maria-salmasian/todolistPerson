@@ -108,6 +108,20 @@ public class ToDoListServiceImplTest extends TodolistApplicationTests {
         assertEquals(expected, result);
     }
 
+
+    @Test
+    void getActiveAndOrderedToDoListItemsOK() {
+        List<ToDoListModel> expected = Collections.singletonList(new ToDoListModel(0, 0, 1, false, LocalDateTime.of(2020, 1, 1, 0, 0, 0), LocalDateTime.of(2020, 1, 1, 0, 0, 0), "description"));
+        ToDoList toDoList = createToDoList();
+        List<ToDoList> toDoLists = Collections.singletonList(toDoList);
+        Mockito.when(toDoListRepository.findAll()).thenReturn(toDoLists);
+        ToDoListModel toDoListModel = new ToDoListModel(0, 0, 1, false, LocalDateTime.of(2020, 1, 1, 0, 0, 0), LocalDateTime.of(2020, 1, 1, 0, 0, 0), "description");
+        Mockito.when(modelMapper.map(toDoList, ToDoListModel.class)).thenReturn(toDoListModel);
+        List<ToDoListModel> result = toDoListService.getActiveAndOrderedToDoListItems();
+
+        assertEquals(expected, result);
+    }
+
     @Test
     void saveToDoListOK() throws Exception {
         ToDoListModel toDoListModel = new ToDoListModel(0, 0, 0, false, LocalDateTime.of(2020, 1, 1, 0, 0, 0), LocalDateTime.of(2020, 1, 1, 0, 0, 0), "description");
@@ -160,6 +174,7 @@ public class ToDoListServiceImplTest extends TodolistApplicationTests {
         assertEquals(expected, result);
         verify(toDoListRepository).delete(toDoList1);
     }
+
 
 
     @Test
