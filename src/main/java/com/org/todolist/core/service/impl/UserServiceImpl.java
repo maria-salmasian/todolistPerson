@@ -5,22 +5,18 @@ import com.org.todolist.core.service.UserService;
 import com.org.todolist.core.service.exception.NotFoundException;
 import com.org.todolist.core.service.exception.UserNotFoundException;
 import com.org.todolist.core.service.exception.ValidationException;
-import com.org.todolist.infrastructure.entity.Gender;
-import com.org.todolist.infrastructure.entity.Profession;
 import com.org.todolist.infrastructure.entity.User;
-import com.org.todolist.infrastructure.repository.GenderRepository;
-import com.org.todolist.infrastructure.repository.ProfessionRepository;
 import com.org.todolist.infrastructure.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import org.springframework.util.Assert;
 
 @Service
 @Slf4j
@@ -28,6 +24,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+//    @Autowired
+//    private UserSpecification userSpecification;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -43,6 +42,27 @@ public class UserServiceImpl implements UserService {
         return userList;
     }
 
+
+//    @Override
+//    public List<UserModel> getUsersByFilter( String searchString, FilterRequest filter) {
+//
+//        List<UserModel> userList= (List<UserModel>) userRepository.findAll(Specification.where(userSpecification.hasString(searchString)
+//                .or(userSpecification.hasGender(searchString)))
+//                .and(userSpecification.getFilter(filter)))
+//                .stream()
+//                .map(x -> modelMapper.map(x, UserModel.class))
+//                .collect(Collectors.toList());
+//
+//        return userList;
+//    }
+
+
+    /**
+     *
+     * @param id
+     * @return
+     * @throws UserNotFoundException
+     */
     @Override
     public UserModel getUserByID(int id) throws UserNotFoundException {
         User user = userRepository.findById(id)
@@ -53,6 +73,12 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    /**
+     *
+     * @param userModel
+     * @return
+     * @throws ValidationException
+     */
     @Override
     public User saveUser(UserModel userModel) throws ValidationException {
         if (userModel != null) {
@@ -66,8 +92,15 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    /**
+     *
+     * @param id
+     * @param userModel
+     * @return
+     * @throws NotFoundException
+     */
     @Override
-    public User updateUserByID(int id, UserModel userModel) throws NotFoundException {
+    public User updateUserByID(int id, UserModel userModel) throws UserNotFoundException {
         User userToBeUpdated = userRepository.findById(id).orElseThrow(() ->
                 new UserNotFoundException("user not found for this id :: " + id));
         Assert.notNull(userModel, "the body is null");
@@ -79,6 +112,11 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user1);
     }
 
+    /**
+     *
+     * @param id
+     * @throws UserNotFoundException
+     */
     @Override
     public void deleteUserByID(int id) throws UserNotFoundException {
         User user = userRepository.findById(id)

@@ -34,6 +34,7 @@ public class ToDoListServiceImpl implements ToDoListService {
     private ModelMapper modelMapper;
 
 
+
     @Override
     public List<ToDoListModel> getOrderedToDoListItems()  {
         log.info("method getOrderedToDoListItems invoked from ToDoListService");
@@ -48,7 +49,11 @@ public class ToDoListServiceImpl implements ToDoListService {
     }
 
 
-//paramy petqa lini enum
+    /**
+     *
+     * @param status
+     * @return
+     */
     @Override
     public List<ToDoListModel> getToDoListItemsBasedOnStatus(StatusEnum status) {
         log.info("method getToDoListItemsBasedOnStatus invoked from ToDoListService");
@@ -62,6 +67,12 @@ public class ToDoListServiceImpl implements ToDoListService {
     }
 
 
+    /**
+     *
+     * @param id
+     * @return
+     * @throws ToDoListNotFoundException
+     */
     @Override
     public ToDoListModel getToDoListByID(int id) throws ToDoListNotFoundException {
         log.info("method getToDoListByID invoked from ToDoListService");
@@ -71,6 +82,7 @@ public class ToDoListServiceImpl implements ToDoListService {
         return toDoListModel;
     }
 
+
     @Override
     public List<ToDoListModel> getActiveToDoListItems(){
         log.info("method getActiveToDoListItems invoked from ToDoListService");
@@ -78,14 +90,36 @@ public class ToDoListServiceImpl implements ToDoListService {
                 .findAll())
                 .stream()
                 .map(x -> modelMapper.map(x, ToDoListModel.class))
-                .filter(toDoListDTO -> toDoListDTO.getStatusId() == (StatusEnum.IN_PROGRESS).getId() ||
-                        toDoListDTO.getStatusId() == (StatusEnum.TO_DO).getId())
+                .filter(toDoListModel -> toDoListModel.getStatusId() == (StatusEnum.IN_PROGRESS).getId() ||
+                        toDoListModel.getStatusId() == (StatusEnum.TO_DO).getId())
                 .collect(Collectors.toList());
         Assert.notEmpty(toDoListModels,"No toDoList found");
         return toDoListModels;
     }
 
 
+    @Override
+    public List<ToDoListModel> getActiveAndOrderedToDoListItems(){
+        log.info("method getActiveAndOrderedToDoListItems invoked from ToDoListService");
+        List<ToDoListModel> toDoListModels = (toDoListRepository
+                .findAll())
+                .stream()
+                .map(x -> modelMapper.map(x, ToDoListModel.class))
+                .sorted(Comparator.comparing(ToDoListModel::getUserId))
+                .filter(toDoListModel -> toDoListModel.getStatusId() == (StatusEnum.IN_PROGRESS).getId() ||
+                        toDoListModel.getStatusId() == (StatusEnum.TO_DO).getId())
+                .collect(Collectors.toList());
+        Assert.notEmpty(toDoListModels,"No toDoList found");
+        return toDoListModels;
+    }
+
+    /**
+     *
+     * @param toDoListModel
+     * @return
+     * @throws UserNotFoundException
+     * @throws ValidationException
+     */
     @Override
     public ToDoList saveToDoList(ToDoListModel toDoListModel) throws UserNotFoundException, ValidationException {
         log.info("method saveToDoList invoked from ToDoListService");
@@ -101,6 +135,15 @@ public class ToDoListServiceImpl implements ToDoListService {
     }
 
 
+    /**
+     *
+     * @param id
+     * @param toDoListModel
+     * @return
+     * @throws UserNotFoundException
+     * @throws ToDoListNotFoundException
+     * @throws ValidationException
+     */
     @Override
     public ToDoList updateToDoListByID(int id, ToDoListModel toDoListModel) throws UserNotFoundException, ToDoListNotFoundException, ValidationException {
         log.info("method updateToDoListByID invoked from ToDoListService for id{}", id);
@@ -115,6 +158,11 @@ public class ToDoListServiceImpl implements ToDoListService {
         } else throw new ValidationException("Body Not Valid");
     }
 
+    /**
+     *
+     * @param id
+     * @throws ToDoListNotFoundException
+     */
     @Override
     public void deleteToDoListByID(int id) throws ToDoListNotFoundException {
         log.info("method deleteToDoListByID invoked from ToDoListService for id{}", id);
@@ -123,6 +171,7 @@ public class ToDoListServiceImpl implements ToDoListService {
         toDoList.setDeleted(true);
         toDoListRepository.save(toDoList);
     }
+
 
     @Override
     public void deleteAllToDoList() {

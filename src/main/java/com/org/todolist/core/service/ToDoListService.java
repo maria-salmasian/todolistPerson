@@ -22,5 +22,6 @@ public interface ToDoListService {
     List<ToDoListModel> getOrderedToDoListItems() ;
     List<ToDoListModel> getToDoListItemsBasedOnStatus(StatusEnum status);
     List<ToDoListModel> getActiveToDoListItems();
+    List<ToDoListModel> getActiveAndOrderedToDoListItems();
 
 }

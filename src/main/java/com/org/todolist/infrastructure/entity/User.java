@@ -34,6 +34,7 @@ public class User {
     @Column(name = "surname")
     private String surname;
 
+    //unique
     @Email(message = "email not valid")
     @Column(name = "email")
     private String email;
