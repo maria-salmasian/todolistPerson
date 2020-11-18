@@ -12,7 +12,7 @@ Spring Boot
 Maven 3.6.3
 PostgreSql
 
-#Data
+# Data
 Data is stored in PostgreSql database
 Tables:
     users
@@ -25,24 +25,24 @@ Tables:
 ![diagram](https://user-images.githubusercontent.com/67556986/99569478-1d901500-29ea-11eb-98fc-cbc6adf0dff1.png)
 
 
-#Libraries used
+# Libraries used
 Hibernate Validation API
 Swagger API: http://localhost:8080/swagger-ui.html#/
 Lombok
 JSON Library
 
 
-#External tools
+# External tools
 Postman
 
-#Features
+# Features
 - User and To-do List CRUD operations
 - Logger
 - Custom exceptions
 - Spring security
 - Unit tests
 
-#Package structure
+# Package structure
 
 ws: sub packages : controller , dto , exception, converter) 
 core: sub packages : model, service, serviceImpl
