@@ -59,16 +59,16 @@ Headers:
 To get user: GET: http://localhost:8080/user/{id}                     
 To get all users: GET: http://localhost:8080/user                     
 To create user: POST: http://localhost:8080/user                     
-e.g. {
-         "name": "name",
-         "surname": "surname",
-         "salary": 0,
-         "email": "email",
-         "age": 0,
-         "genderId": 1,
-         "professionId": 2,
-         "passportNo": 0
-     }
+e.g. {                     
+         "name": "name",                     
+         "surname": "surname",                     
+         "salary": 0,                     
+         "email": "email",                     
+         "age": 0,                     
+         "genderId": 1,                     
+         "professionId": 2,                     
+         "passportNo": 0                     
+     }                     
      
 To update user: PUT: http://localhost:8080/user/{id}                     
 To delete user: DELETE: http://localhost:8080/user/{id}                     
@@ -79,9 +79,9 @@ To get all toDoLists: GET: http://localhost:8080/toDoLists (request params avail
 e.g. http://localhost:8080/toDoList?ordered=true&active=true                     
 
 To create toDoList: POST: http://localhost:8080/toDoList                     
-e.g.  {"userId": 1,
-         "statusId": 1,
-         "description": "do something"}
+e.g.  {"userId": 1,                     
+         "statusId": 1,                     
+         "description": "do something"}                     
          
 To update toDoList: PUT: http://localhost:8080/toDoList/{id}                     
 To delete toDoList: DELETE: http://localhost:8080/toDoList/{id}                     
