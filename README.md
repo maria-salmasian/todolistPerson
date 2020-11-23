@@ -26,9 +26,9 @@ Tables:
 
 
 #Libraries used
-Hibernate Validation API  
-Swagger API: http://localhost:8080/swagger-ui.html#/  
-Lombok   
+Hibernate Validation API
+Swagger API: http://localhost:8080/swagger-ui.html#/
+Lombok
 JSON Library
 
 
@@ -44,12 +44,12 @@ Postman
 
 #Package structure
 
-ws: sub packages : controller , dto , exception, converter)    
-core: sub packages : model, service, serviceImpl   
-infrastructure: subpackages : entity, repositories      
-utils: enumeration    
-visibility:   
-ws -> core -> infrastructure   
+ws: sub packages : controller , dto , exception, converter) 
+core: sub packages : model, service, serviceImpl
+infrastructure: subpackages : entity, repositories
+utils: enumeration
+visibility:
+ws -> core -> infrastructure
 object  conversation: model mapper
 
 
