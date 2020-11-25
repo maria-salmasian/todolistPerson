@@ -50,7 +50,9 @@ infrastructure: subpackages : entity, repositories
 utils: enumeration
 visibility:
 ws -> core -> infrastructure
-object  conversation: model mapper
+object  conversation: model mapper   
+
+![Uml](https://user-images.githubusercontent.com/67556986/100229933-67bf4c00-2f3e-11eb-9bd7-41ed34123fb2.png)
 
 
 # Instructions: getting started
